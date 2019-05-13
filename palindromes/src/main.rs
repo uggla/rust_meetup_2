@@ -1,15 +1,38 @@
 use rayon::prelude::*;
 
 fn est_palindrome(phrase: &str) -> bool {
-    unimplemented!()
+    let length = phrase.len() / 2;
+    phrase
+        .chars()
+        .take(length)
+        .filter(|&c| !c.is_whitespace())
+        .flat_map(|c| c.to_lowercase())
+        .zip(
+            phrase
+                .chars()
+                .rev()
+                .take(length)
+                .filter(|&c| !c.is_whitespace())
+                .flat_map(|c| c.to_lowercase()),
+        )
+        .all(|(a, b)| a == b)
+        && !phrase.is_empty()
 }
 
 fn tous_les_palindromes(phrases: &str) -> Vec<String> {
-    unimplemented!()
+    phrases
+        .split('.')
+        .filter(|&p| est_palindrome(p))
+        .map(|p| p.to_string())
+        .collect()
 }
 
 fn tous_les_palindromes_en_parallele(phrases: &str) -> Vec<String> {
-    unimplemented!()
+    phrases
+        .par_split('.')
+        .filter(|&p| est_palindrome(p))
+        .map(|p| p.to_string())
+        .collect()
 }
 
 fn main() {
